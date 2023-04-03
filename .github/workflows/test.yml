@@ -1,0 +1,36 @@
+name: "Run tests"
+on:
+  push:
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Restore Nix Store
+        id: nix-store-restore
+        uses: actions/cache/restore@v3
+        with:
+          path: |
+            /home/runner/nix
+          key: ${{ runner.os }}-nix
+
+      - uses: cachix/install-nix-action@v20
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+          extra_nix_config: |
+            # save space on disk and in cache
+            auto-optimise-store = true
+            store = /home/runner/nix
+            # keep all store paths necessary to build the outputs
+            keep-outputs = true
+            keep-derivations = true
+      - run: |
+          nix develop .#test -c sh ./ci_tests.sh
+      - name: Save nix store
+        id: nix-store-save
+        uses: actions/cache/save@v3
+        with:
+          path: |
+            /home/runner/nix
+          key: ${{ steps.nix-store-restore.outputs.cache-primary-key }}
