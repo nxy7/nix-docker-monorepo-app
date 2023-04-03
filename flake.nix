@@ -7,7 +7,7 @@
     utils.lib.eachSystem [ "x86_64-linux" ] (system:
       let
         pkgs = import nixpkgs { inherit system; };
-        corePackages = with pkgs; [ nodejs-slim-19_x go ];
+        corePackages = with pkgs; [ nodejs-slim-19_x nodePackages.pnpm ];
       in {
         # packages
         packages.frontendContainer = pkgs.dockerTools.buildImage {
