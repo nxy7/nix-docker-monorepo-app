@@ -1,0 +1,4 @@
+#override compose.yml containers and add new ones
+services:
+  hello:
+    ports: 1234:1234

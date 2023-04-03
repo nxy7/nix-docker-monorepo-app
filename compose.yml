@@ -1,0 +1,6 @@
+services:
+  # add dependencies used in dev and production
+  # database:
+    # image: postgres
+  hello:
+    images: hello-world

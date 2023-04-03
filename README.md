@@ -16,7 +16,7 @@ at output > devshells > *shellName*
 
 ## Tests in CI
 Testing in this repo is done via Github Actions (*.github/workflows/test.yml*) and *ci_tests.sh* script.
-Thanks to that it would be easier to change testing environment from Github to
+Thanks to that it should be easier to change testing environment from Github to
 other service provider. Using nix in test actions allows for easy workflow with test enviroment testable
 on local machine. Tests are run via
 `nix develop .#test -c sh ./ci-tests.sh` and can be invoked in any CI provider or on local machine.

@@ -1,0 +1,8 @@
+services:
+  frontend:
+    image: nix-docker-frontend:latest
+    ports: 3000:3000
+  backend:
+    image: nix-docker-backend:latest
+    ports: 7001:7001
+    
