@@ -7,6 +7,11 @@
     utils.lib.eachSystem [ "x86_64-linux" ] (system:
       let
         pkgs = import nixpkgs { inherit system; };
+        backendApp = pkgs.buildGoModule {
+          name = "backend";
+          src = ./backend;
+          vendorSha256 = "sha256-sGSBPztiLa0Ngq8zHIZUoqeQJ0CYivDcJl5/fnhZ/+0=";
+        };
         corePackages = with pkgs; [ nodejs-slim-19_x nodePackages.pnpm ];
       in {
         # packages
@@ -19,7 +24,8 @@
         packages.backendContainer = pkgs.dockerTools.buildImage {
           name = "nix-docker-backend";
           tag = "latest";
-          config = { Cmd = [ "${pkgs.hello}/bin/hello" ]; };
+          contents = [ pkgs.bash backendApp ];
+          config = { Cmd = [ "${backendApp}" ]; };
         };
         # dev environment
         devShells.dev = pkgs.mkShell { packages = corePackages; };
