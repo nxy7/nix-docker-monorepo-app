@@ -18,14 +18,19 @@
         packages.frontendContainer = pkgs.dockerTools.buildImage {
           name = "nix-docker-frontend";
           tag = "latest";
-          contents = with pkgs; [ nodejs-slim-19_x ];
-          config = { Cmd = [ "${pkgs.hello}/bin/hello" ]; };
+          created = "now";
+          config = { Cmd = [ "${pkgs.nodejs-slim-19_x}/bin/node" ]; };
         };
         packages.backendContainer = pkgs.dockerTools.buildImage {
           name = "nix-docker-backend";
           tag = "latest";
-          contents = [ pkgs.bash backendApp ];
-          config = { Cmd = [ "${backendApp}" ]; };
+          created = "now";
+          copyToRoot = pkgs.buildEnv {
+            name = "image-root";
+            paths = [ backendApp ];
+            pathsToLink = [ "/bin" ];
+          };
+          config = { Cmd = [ "/bin/nix-docker-example-backend" ]; };
         };
         # dev environment
         devShells.dev = pkgs.mkShell { packages = corePackages; };
